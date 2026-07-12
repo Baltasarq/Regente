@@ -1,0 +1,9 @@
+# Backups
+*~
+*.bak
+
+# Story files
+*.z?
+*.ulx
+*.blb
+*.gblorb

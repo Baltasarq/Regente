@@ -1,0 +1,403 @@
+!
+!  Créditos.
+! baltasarq@gmail.com
+!
+
+! Constantes
+Constant Historia "El Anillo Regente^";
+Constant Titular  "La búsqueda del poder de las tinieblas.^^";
+
+! Número de serie
+Serial "020420";
+
+! Constantes para modificar el comportamiento del parser
+Constant PUNTUACION_MAX 2;
+Constant HAY_CURIOSIDADES; 
+
+! Incluir la librería (en parte)
+! Estas líneas están presentes en cualquier aventura
+Include "EParser";
+Include "Acciones";
+Include "Responde";
+Include "ETemas";
+Include "smw";
+
+class Lugar
+    with cantidad
+has luz;
+
+Include "PnjMovil";
+
+[curiosidades;
+    print
+  	"Esta aventura conversacional fue realizada para la ESDAComp ...^^";
+    Negrita();
+    print 
+  	 "I Competición ~El Señor de los Anillos~^^";
+    Normal();
+    print
+  	 "Espero que hayas disfrutado jugándola tanto como yo haciéndola.^^
+  	 He utilizado para documentarme, el ~Silmarillion~, y  
+  	 ~El Señor de los Anillos~, de J.R.R. Tolkien.^
+  	 Pienso que puede considerarse como previa, o una introducción al,
+  	 resto de las aventuras que se van a presentar al concurso.
+  	 ^^";
+    Italica();
+    print "    Baltasar, el arquero. baltasarq@@64gmail.com^^";
+];
+
+
+!---------------------------------------------------------------------
+! El Anillo Regente
+!---------------------------------------------------------------------
+
+Object anillo
+with
+    nombre 'anillo' 'regente' 'unico',
+    portador 0,
+    descripcion [; 
+            print "Observáis vuestra forma actual, una forma propia y adecuada
+                 para la tierra media. Una mediana arandela de oro. ";
+            if (localizacion == laMontanaFuego)
+                print "Una inscripción en élfico rodea vuestra forma. ";
+            print "^";
+            if (self.portador ~= 0)
+                print (address) self.portador.nombre, " es vuestro portador.^";
+            else print "Nadie os porta.^";
+            rtrue;
+    ],
+    antes [;
+        examinar: print "Conocéis perfectamente vuestra forma actual ... ^";
+                  rfalse;
+        deslizar: deslizarSub(); rtrue;
+    ],
+    noPuedesHablar [;
+        print "^¿Debe un ser superior, nacido de la forja de Sauron, hablar
+               a seres inferiores?^Ordenadles, como solíais hacer, con ~ser, orden~^";
+        rtrue;
+    ],
+    noPuedesAtacar [;
+        "En vuestra actual forma, no podéis hacerlo.";
+    ],
+    noPuedesMoverte [;
+        "En vuestra actual forma, no podéis moveros por cuenta propia.";
+    ],
+    ordenes [;
+        preguntar: return self.noPuedesHablar();
+        hablar: return self.noPuedesHablar();
+        besar:
+            "¡Un ser malvado no hace esas cosas!";
+        atacar:
+            return self.noPuedesAtacar();
+        ir:
+            return self.noPuedesMoverte();
+        inv:if (self.portador==0)
+                "Nadie os porta";
+            else {
+                print (address) self.portador.nombre, " es vuestro portador.^";
+                rtrue;
+            }
+    ]
+;
+
+!---------------------------------------------------------------------
+!	Localidades
+!---------------------------------------------------------------------
+
+Object elRio "Río Grande"
+    with 
+     descripcion
+       "El fondo es rocoso, poblado por diminutas algas. El musgo, crece
+        por doquier, poblando las rocas cercanas al agua y trepando hasta la
+        bóveda de verdes árboles, de la que cuelgan exhuberantes lianas de 
+        enredaderas. Extraordinarios reflejos de la escasa luz 
+        proveen un entorno casi mágico."
+has luz;
+
+Include "escenita.inf";
+Object laMontanaFuego "Montaña de Fuego"
+    with 
+     descripcion
+      [;
+       print "La Montaña de Fuego, la forja de Sauron. Te encuentras al borde del
+        cráter del volcán, donde la lava del fondo arde y se retuerce en
+        caprichosas y malignas formas. A pesar de la proximidad de la lava
+        candente, el entorno es oscuro, se encuentra sobre tí un cerrado
+        tejido de nubes negras.^Aquí se creó el Anillo Regente.^";
+       if (jugador==Anillo)
+            print "Aquí fuisteis creado.^";
+      ]
+has luz;
+
+class cueva
+class lugar;
+
+! En la gruta, con el Gollum
+Include "gruta.inf";
+
+Object exterior "Montañas Nubladas"
+with
+    descripcion 
+        "¡Por fín! Después de tantos años, el Anillo Regente ve la luz de la 
+         Tierra Media, con todas sus posibilidades.^
+         La falda de estas montañas cae al norte sobre el Bosque Verde, atravesado por el
+         Río Grande.^
+         Al Sur se encuentra la entrada a la red de galerías donde vive el
+         gollum.",
+    al_s EntradaCueva
+has luz;
+
+
+! Después de las localidades, incluimos la gramática
+! Este include siempre está aquí en todos los programas
+
+Include "Gramatica";
+
+!Definiciones de la gramática para este juego
+
+[brillarSub;
+    "No tenéis esa capacidad en esta forma.^Vuestro poder es mucho mayor ... controlad a los seres
+     inferiores ... hacedles seguir vuestras órdenes ...^^";
+];
+
+[encogerSub;
+    "No podéis moldear vuestra forma.^Sí podéis, en cambio, traicionar a vuestro portador y deslizaros
+     de su mano ...";
+];
+
+[estirarSub;
+    "No podéis aumentar de tamaño. Sí podéis, en cambio, traicionar a vuestro portador y deslizaros
+     de su mano ...";
+];
+
+[deslizarSub p;
+    p = anillo.portador;
+    anillo.portador = 0;
+    if (parent(p) == laMontanaFuego) {
+        banderafin = 1;
+        "Os deslizáis de la mano de Isildur vosotros mismos, para caer en la
+         forja de Sauron. El reinado maligno de Sauron ha terminado de la mano
+         del hijo más poderoso de su forja.";
+    }
+    else {
+  	   p.despuesDePerderAnillo();
+        print "Traicionais a ", (address) p.nombre, " ...";
+        "Os deslizáis de su mano, cayendo al suelo ...";
+    }   
+];
+
+[leerSub;
+  	if (anillo.portador == 0)
+    		"Debéis tener un portador para poder leer su mente, o dirigir vuestro
+  	      poder a alguien.";
+  	else return anillo.portador.lecturaMente();
+];
+
+[controlarSub;
+	"Controlad a los seres inferiores dándoles órdenes directamente.
+	 Así lo haría un leal siervo de Sauron.";
+];
+
+[ ayudaSub;
+    print "^Las órdenes siguientes son básicas y pueden encontrarse
+      en casi cualquier aventura conversacional. Algunas se han reducido
+      a uno o dos caracteres. El jugador puede tratar siempre de hacer
+      otras acciones.^^";
+    s_fixed();
+    print "^
+     ayuda                 -   Esta ayuda.^
+     ex, examinar x        -   Da una descripción de x.^
+     examinarme, xme       -   Información sobre ti y sobre tu misión.^
+     hablar con y          -   Permite comunicarse con y, si está presente.^
+     x, y                  -   Dar a x la orden y.^
+     ^^"
+    ;
+    s_normal();
+    print (s_underline) "Por Baltasar, el Arquero.", (s_normal)
+    "^^
+      Mándame tus comentarios a: baltasarq@@64yahoo.es
+      ^^
+      Tú eres ", (s_underline) player.short_name,
+      ", Comandante de la Flota Espacial de Alkran...
+     ^";
+    <<Examine player>>;
+];
+
+
+Extend 'habla' first
+  	* 'con' noun -> hablar
+  	* 'a' noun -> hablar
+  	* 'al' noun -> hablar
+  	* 'a' noun -> hablar
+;
+
+Extend 'lee' first
+  	* -> leer
+  	* noun -> leer
+  	* 'mente' noun -> leer
+	* 'mente' 'de' noun -> leer
+	* 'mente' 'del' noun -> leer
+  	* 'la' 'mente' 'de' noun -> leer
+	* 'la' 'mente' 'del' noun -> leer
+;
+
+Verb 'controla'
+	* noun -> controlar
+  	* 'a//' noun -> controlar
+  	* 'al' noun -> controlar
+;
+
+Verb 'influye' 
+	* noun -> controlar
+	* 'en' noun -> controlar
+	* 'en' 'el' noun -> controlar
+	* 'en' 'la' noun -> controlar
+  	* 'a' noun -> controlar
+  	* 'al' noun -> controlar
+;
+VerboIrregular "influir" with imperativo 'influye';
+
+Extend 'ofrece' first
+	* noun -> controlar
+	* 'a//' noun -> controlar
+;
+
+Verb 'aumenta'
+    * -> estirar
+;
+
+Verb 'agranda'
+    * -> estirar
+;
+
+Verb 'estira'
+    * -> estirar
+;
+
+Verb 'brilla'
+    * -> brillar
+;
+
+Verb 'encoge'
+    * -> encoger
+;
+
+Verb 'desliza'
+    * -> deslizar
+    * noun -> deslizar;
+
+Verb 'cae'
+    * -> deslizar
+    * noun -> deslizar;
+    
+Verb 'c' = 'coge';
+Verb 'd' = 'deja';
+
+Verb 'ayuda'
+    * -> ayuda
+;
+
+!---------------------------------------------------------------------
+!	Corto de inicialización del juego
+!---------------------------------------------------------------------
+Include "Cortos";
+
+Include "historia.inf";
+
+!---------------------------------------------------------------------
+!	Inicialización
+!---------------------------------------------------------------------
+[ Inicializar;
+         modo_notificar = 0;
+
+	! Poner al jugador en su sitio
+        CambiarJugador(anillo);
+	    localizacion = laMontanaFuego;
+
+	! Mover los objetos que van a ir con el jugador
+          anillo.portador = isildur;
+
+          print "(Aquellos que juegan por primera vez deben teclear 'AYUDA' ante
+                      el prompt: '>'. Pulsa ENTER cada vez que veas: '...').^";
+          wait();
+          clearMainWindow();
+	! Descripción inicial
+          print "El Anillo Regente^^";
+          print "¿Deseas ver la historia inicial?  ";
+          
+          if (SiONo())
+              lahistoria.proyeccion();
+          clearMainWindow();
+          ArrancarReloj(isildur, 10);
+
+];
+
+
+!-------------------------------------------------------------
+!	Decorados
+!-------------------------------------------------------------
+
+Include "Decorado";
+
+class DecoradoReact
+class Decorado
+with
+	describir
+	  'piedras' "Véis muchas piedras y rocas de gran tamaño ..." G_FEMENINO + G_PLURAL
+      ,
+  	antes [;
+                  leer: "Las cosas no piensan.";
+			  coger: "¿Coger?^¿Cómo?^";
+                  dejar: "No es posible que lo hagáis.";
+                  deslizar: "Eso no es posible.";
+	  ]
+;
+
+DecoradoReact DecoradoElRio elRio
+        with describir
+            'rocas' "Están recubiertas de musgo parduzco." G_FEMENINO + G_PLURAL
+            'roca' "Las rocas parecen muy resbaladizas y húmedas." G_FEMENINO
+		'aguas' "La superficie del agua sólo se rompe por algún goteo esporádico." G_FEMENINO + G_PLURAL
+		'agua'  "Parece estar fresquita." G_FEMENINO
+            'superficie' "La superficie del agua está en calma." G_FEMENINO
+            'enredaderas' "Trepan por los árboles" G_FEMENINO + G_PLURAL
+            'arboles' "Están alrededor del agua" G_FEMENINO + G_PLURAL
+            'musgo' "Hay abundante musgo por doquier." 0
+            'rio' "El río Grande uno de los más grandes rios de la Tierra Media" 0
+;
+
+DecoradoReact DecoradoEscenita laMontanaFuego
+        with describir
+            'rocas' "Reflejan el calor de la forja." G_FEMENINO + G_PLURAL
+            'roca'  "Parece casi candente." G_FEMENINO
+		'lava'  "Allí se creó el anillo." G_FEMENINO
+            'inscripcion' "Ahora no es importante." G_FEMENINO
+            'forja' "La forja de Sauron en Mordor, tu tierra." G_FEMENINO
+	    'volcan' "La forja de Sauron en Mordor, tu tierra." 0
+;
+
+class DecoradoReactCueva
+class DecoradoReact
+        with describir
+            'rocas' "Oscuras y variadas." G_FEMENINO + G_PLURAL
+            'roca'  "Ninguna tiene nada especial." G_FEMENINO
+		'oscuridad'  "Es realmente tétrico." G_FEMENINO
+            'cueva' "Está excavada en la roca." G_FEMENINO
+            'galería' "Está excavada en la roca." G_FEMENINO
+;
+
+DecoradoReactCueva DecEntrada entradacueva
+;
+
+DecoradoReactCueva DecGuarida guarida
+;
+
+DecoradoReactCueva DecGaleria galeria
+;
+
+DecoradoReactCueva DecExtremoO extremoO
+;
+
+DecoradoReactCueva DexExtremoE extremoE
+;
+

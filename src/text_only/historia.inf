@@ -1,0 +1,125 @@
+! Historia.inf
+! Este archivo pertenece a regente.inf
+! Es el corto de presentación inicial.
+! Baltasar, el arquero baltasarq@yahoo.es
+
+[PonSaltos x;
+    for (:x>0:x--)
+        print "^";
+    rtrue;
+];
+
+cortometraje lahistoria
+with
+    descripcion
+        "Al principio, sólo existía el uno, Eru, el creador, también
+         llamado Ilúvatar ...^^^"
+        "... Ilúvatar creó primeramente a los Ainur, a los que les proponía
+         temas de su música ...^"
+        "... los Ainur tocaron mientras Ilúvatar escuchaba ...^^^^^^"
+        [;
+            self.delay = 50;
+            Erase_Window();
+            "~... la música y el eco de la música desbordaron volcándose en
+              el Vacío, y ya no hubo vacio.~";
+        ]
+        [;
+            Erase_Window();
+            self.delay = 30;
+            "Y de todos ellos, el más poderoso que había creado Ilúvatar era
+             Melkor. Y Melkor quiso crear su propia música, y dejar su impronta
+             en la música de los demás.^^";
+        ]
+        "Y surgió de los Ainur una gran cacofonía, debido a la música de Melkor,
+         y por tres veces, Ilúvatar les detuvo, y les ordenó tocar nueva música.^^^^"
+        "E Ilúvatar les enseñó el mundo que la música de todos había creado.^^^^^^"
+        "Y varios de ellos quisieron bajar al mundo y vivir en él, cuidándolo y
+         haciéndolo crecer. Y fueron conocidos como los Valar.^^^"
+        "Y Melkor fue uno de los Valar, y su ambición por el mundo era tan grande
+         que luchó
+         contínuamente contra todos sus hermanos.^^^^^"
+        [;
+            self.delay = 60;
+            "Fue conocido como Morgoth, el primer señor oscuro.^^";
+        ]
+        " ... y Morgoth captó a Sauron para que le sirviera.^^^"
+        " ... y Sauron le sirvió bien, pues era en verdad poderoso ... ^^^"
+        " ... cuando Morgoth fue finalmente derrotado, Sauron se declaró arrepentido
+         y en Eregion, forjó los anillos de poder con la ayuda de los Elfos ...^"
+        [;
+            self.delay = 40;
+        " ... pero en la Montaña de Fuego, en Mordor, él mismo forjó el Anillo 
+          Único, el Anillo Regente, que controla a todos los demás^^^^";
+        ]
+        [;
+            PonSaltos(50);
+            print "Tres anillos para los reyes Elfos bajo el cielo.^";
+        ]
+        [;
+            PonSaltos(50);
+            print "Siete para los señores enanos en sus casas de piedra.^";
+        ]
+        [;
+            PonSaltos(50);
+            print "Nueve para los hombres mortales condenados a morir.^";
+        ]
+        [;
+            Self.delay = 50;
+            PonSaltos(10);
+            print "Uno para el Señor Oscuro, sobre el trono oscuro en la tierra
+                   de Mordor donde se extienden las sombras.^";
+            print "Un anillo para gobernarlos a todos. Un anillo para encontrarlos,
+                   un anillo para atraerlos a todos y atarlos en las tinieblas,
+                   en la Tierra de Mordor donde se extienden la sombras.^^^^^";
+        ]
+        [;
+            Erase_Window();
+            self.delay = 100;
+            "La guerra estalló, y Sauron fue dolorsamente derrotado, 
+             e Isildur, aquel que
+             derrotó a Sauron, se dirigió a la forja maligna, a la Montaña de Fuego,
+             donde sólo el anillo podría ser destruido ...^^^";
+        ]
+;
+
+
+cortometraje continuahistoria
+with
+    descripcion
+        "Elrond mira a Isildur desconfiadamente, con pesar.^"
+        [;
+        self.delay = 50;
+        "El Anillo Regente había logrado influir en Isildur^^^^^^^^^";
+        ]
+        "Isildur marchó con sus tropas ... portando el anillo.^"
+        "Pero en el Río Grande, cerca del Bosque Verde, acampó para pasar la noche ...^"
+        "Creyendo al enemigo totalmente derrotado, no dispuso guardias.^^^^^^"
+        [;
+        self.delay = 50;
+        "Los orcos atacaron.^^^^^^";
+        ]
+        "Isildur huyó colocándose el anillo, lo cuál le hacía invisible.^"
+        "Pero el anillo le traicionó deslizándose de su dedo en el Río Grande.^"
+        "Y los orcos le mataron con sus flechas.^^^^^^"
+        "El Anillo Regente, en el que habitaba la maldad de Sauron, durmió durante
+         años en el lecho del río ...^"
+;
+
+cortometraje finalhistoria
+with
+    descripcion
+        "El hobbit, Bilbo Bolsón, llevó al Anillo Regente a la comarca ... "
+        [;
+            self.delay = 70;
+            "donde hizo de guardián, sin comunicarle su existencia a nadie ...^";
+        ]
+        "Pero un Istari, Mithrandir, también conocido como Gandalf, se dió
+         cuenta de que el hobbit era el portador ahora.^"
+        "También fue Gandalf el más vigilante, el que alertaría a todos del
+         retorno de Sauron, y de los Nueve a la comarca y ..."
+        "... pero eso, es otra historia, que tiene lugar sólo gracias a vos ..."
+        [;
+            self.delay = 50;
+            "El Anillo Regente";
+        ]
+;

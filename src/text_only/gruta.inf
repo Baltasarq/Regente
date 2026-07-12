@@ -1,0 +1,305 @@
+! gruta.inf
+! Archivo de regente.inf
+! Cuando el Anillo Regente se encuentra en la gruta
+! Baltasar, el arquero baltasarq@yahoo.es
+
+! ==================================================== personajes en esta parte
+! ---------------------------------------------------------------------- hobbit
+
+Object TemasdeHobbit
+;
+
+Object gollumEnemigo "GollumEnemigo" TemasdeHobbit
+with
+  	nombre 'gollum' 'enemigo' 'atacar' 'matar' 'golpear' 'patear' 'ataca'
+    		  'patea' 'golpea' 'destruye' 'destruir' 'matale' 'golpeale' 'atacale'
+;
+
+Object salir "Salir" TemasdeHobbit
+with
+  	nombre 'salir' 'sal' 'cueva' 'exterior' 'rapido' 'rapidamente' 'bosque'
+  	       'verde' 'rio' 'grande'
+;
+
+responde hobbitpiensa
+private
+  	elementos
+    		"Bilbo se ha dado cuenta de que vos sois el tesoro de gollum,
+            y que debe intentar salir a escondidas lo más pronto posible."
+    		"Bilbo no puede creer que gollum sea tan feo ..."
+    		" ... que el gollum esté tan solo durante tanto tiempo en esta cueva."
+    		"Bilbo Bolsón echa de menos su casa en la comarca, 
+  	      con el resto de los hobbits"
+    		"Bilbo piensa que morir en esta cueva después de tantas aventuras es
+    		 absolutamente despreciable."
+    		"Bilbo recuerda al odiado Mithrandir, Gandalf, el Istari."
+    		"Bilbo piensa en Frodo Bolsón ..."
+    		"Bilbo está sobrecogido por la oscuridad de la cueva."
+;
+
+personaje hobbit "hobbit"
+class pnjmovil
+private
+    unavez false,
+    invisible false,
+with
+    articulo "al",
+    nombre 'hobbit',
+    descripcion "Es un hobbit, una especie de humano pequeño y peludo.",
+    lecturaMente [;
+    		print (string) hobbitpiensa.dev_msg(), "^";
+    		esperarTecla();
+    ],
+    esInvisible [; return invisible; ],
+    despuesDePerderAnillo [; 
+    		self.invisible = false; 
+    		"El hobbit no se da cuenta de que caéis de su dedo.";
+    ],
+    tiempo_restante 5,
+    tiempo_agotado [;
+      if (~~self.unavez) {
+        move self to EntradaCueva;
+        arrancarDaemon(self);
+        PNJ_Ruta(self, MOVIMIENTO_ALEATORIO, 90);
+        arrancarReloj(self, 35);
+        self.unavez = true;
+        "Escucháis pasos en la entrada de la gruta ...";
+      }
+      else {
+        banderafin = 3;
+        if (anillo.portador == self)
+            print "El hobbit no ha conseguido abandonar la gruta ...^";
+        else
+            print "Se han dejado de escuchar los ruidos del hobbit ... debe haberse marchado ...^^";
+        "El Anillo Regente ha perdido una gran oportunidad de servir a su
+         amo, Sauron. El hobbit podría haberlo sacado de la cueva, y
+         preparar su retorno. El imperio del mal tardará en ser reconstruido
+         de nuevo.";
+      }
+    ],
+    accion_despues [;
+        if (anillo.portador == self
+         && parent(self) == EntradaCueva)
+        {
+            puntuacion++;
+            print "El hobbit, Bilbo Bolsón, ha conseguido encontrar la salida ...^ 
+             Como buen siervo de Sauron, el Anillo Regente ha conseguido
+             sobrevivir y asegurar la siguiente aparición del mal.^";
+            move hobbit to exterior;
+            jugadorA(exterior, 2);
+            print "^ ... escuchas decir ...^";
+            gollum.decir("Noooooo, mi tesssooooooooorooooooooo, hobbbbiiiitttt ladróoooon ...");
+            finalhistoria.proyeccion();
+            banderafin = 2;
+        }
+
+        if (anillo.portador == self)
+            jugadorA(parent(self), 2);
+
+        if (parent(self)==parent(gollum)
+         && parent(self)==parent(anillo))
+        {
+          if (gollum.esHobbitEnemigo())
+            gollum.ataca(hobbit);
+          else
+            print "El gollum se esconde al ver llegar al hobbit.^";
+        }
+
+        if (anillo.portador == 0
+         && parent(self) == parent(anillo))
+        {
+            anillo.portador = hobbit;
+            self.invisible  = true;
+            print "El hobbit os encuentra, y os coloca en su mano, asombrado.
+             Debido a la acción del anillo, el hobbit se vuelve invisible.^";
+        }
+        rtrue;
+    ],
+    vida [;
+        responder:                 
+                  switch (AveriguarTema(temasdeIsildur)) {
+                        ayuda: self.decir("Debo ayudar a ...  un momento ... ¿a quién?"); rtrue;
+                        poder: self.decir("¿Poder? ... yo sólo quiero volver a la comarca ..."); rtrue;
+                  }
+                  switch (AveriguarTema(temasdeHobbit)) {
+                        gollumEnemigo: self.decir("El gollum sólo me da pena ..."); rtrue;
+                        salir: self.decir("Debo salir de estas grutas ...");rtrue;
+                        default: self.decir("Vaya ... estoy como confuso ..."); rtrue;
+                   }
+                   rfalse;
+    ]
+
+;
+    
+
+! ---------------------------------------------------------------------- gollum
+responde gollumpesao
+private
+    elementos
+        "ssssíii, golluuuuuuum ..."
+        "golluuuuummm tiene fríiiioooo ..."
+        "naaaadie quiere a golluuuuuum ..."
+        "goooolluuuuuuuuum ..."
+  	   "el tessoroooo de golluuuuuum ..."
+        "goolluuuuummmm tiene haaaaaambre ..."
+        "golluuuuuuuum ..."
+  	   "amigosssss de golluuuuum ..."
+        "gooolluuuuum está sooooooolo"
+        "gooolluuuuuummmm tiene un tesoro ..."
+        "sssíi, el tesooooro de golluuuuum ..."
+        "mi tessssoooooooroooo ..."
+        "sssíiiii, golluuuuuuum, tiene un tessoooooorooooo ..."
+        "golluuuuuuum no tiene amigossssss ..."
+        "golluuuuuuum sóloooo ..."
+    	   "a gollummmm le gussssta sssssu tessoooorooo ..."
+    	   "golluuuuuummmmmm hambrieeeentooooo ..."
+;
+
+! ----------------------------------------------------------------------- habla
+Object TemasdeGollum
+;
+
+Object dar "dar" TemasdeGollum
+with
+    nombre 'da' 'entrega' 'regala' 'tesoro' 'dame' 'entregame'
+;
+
+Object enemigo "Enemigo" TemasdeGollum
+with
+    nombre 'hobbit' 'enemigo' 'arrebatarte' 'robarte' 'ladrón'
+;
+
+personaje gollum "gollum"
+class PNJMovil
+private
+    hobbitenemigo false
+with
+    nombre 'gollum',
+    descripcion 
+        "El gollum es una criatura deforme, que camina a cuatro patas ... una vez, fue un hobbit ...",
+    articulo "al",
+    despuesDePerderAnillo [;
+    		"gollum no se da cuenta de que vos os caéis ...";
+    ],
+    esHobbitEnemigo [; return self.hobbitenemigo; ],
+    lecturaMente [;
+    		print (string) gollumpesao.dev_msg(), "^"; rtrue;
+    ],
+    ataca [quien;
+  	   if (parent(quien)==parent(self))
+        {
+          if (quien == hobbit)
+          {
+            self.hobbitenemigo = false;
+            anillo.portador = hobbit;
+            "Gollum ataca al hobbit ... creyendo que va a intentar quitarle su
+             tesoro ...^
+             Pero el hobbit se defiende, con una espada élfica ...^
+             Gollum se esconde de nuevo, ya que sabe que no va a ganar ...^
+             Pero además, gollum ya no es el portador, puesto que, durante la 
+             refriega, os habéis deslizado al hobbit.";
+    		} else "No ha hecho nada.";
+  	  }
+  	  else "No está por aquí.";
+    ],
+    tiempo_restante 5,
+    tiempo_agotado [;
+        if (parent(self) ~= localizacion)
+        {
+          move self to localizacion;
+          arrancarReloj(self, 3);
+          "Apreciais que el gollum acaba de aparecer.";
+        }
+        else {
+              anillo.portador = self;
+              print "El gollum os encuentra en el lecho del río y os guarda.
+                     Os lleva a su gruta, donde os considera su tesoro ...^
+                     Allí, pasan los años ..., lentamente ...^ ... pacientemente ... muchos, muchos años ...^^";
+              self.decir("sssíii, mi tesoooooorooooo ...");
+              move self to guarida;
+              arrancarDaemon(self);
+              PNJ_Ruta(self, MOVIMIENTO_ALEATORIO, 40);
+              arrancarReloj(hobbit, 2);
+              jugadorA(guarida,2);
+        }        
+    ],
+    accion_despues [;
+        if (anillo.portador == self)
+            jugadorA(parent(Self), 2);
+        if (parent(hobbit)==parent(self)
+          &&parent(self)==parent(anillo))
+        {
+          if (self.hobbitenemigo)
+            self.ataca(hobbit);
+          else
+          {
+            if (~~(hobbit.esInvisible()))
+                print "El gollum se esconde al ver que el hobbit está aquí.^";
+          }
+        }
+        rtrue;
+    ],
+    cada_turno [;
+        if (parent(self) ofclass cueva)
+            self.decir(gollumpesao.dev_msg());
+    ],
+    vida [;
+        responder:
+                  
+                  switch (AveriguarTema(temasdeIsildur)) {
+                        ayuda: self.decir("nnnnadiieee ayuuuuda a golluuum ... "); rtrue;
+                        poder: self.decir("golluuuuuum no quieeeeere podeeeeer ... 
+                                                quiere amiiigoooos ... 
+    								quiere tessoooooroooo ... 
+    						            mi tessooooorooo ... ssssíiii"); rtrue;
+                  }
+                  switch (AveriguarTema(temasdeGollum)) {
+                        enemigo: self.decir("hooooobbit enemiiiigo, síiii ... 
+							        quiere arreeeeebataaaaar tesooooro de golluuuuum ...
+                                                  hooobbit ... enemiiiiiiiigooooooooo"); 
+    						  self.hobbitenemigo = true;
+                                      rtrue;
+                        dar: self.decir("nooo, ¡¡nooooo!! tessooooroooo de golluuuuum");rtrue;
+                        default: self.decir("golluuuuum y sssu tessooooroooo son lo importante ..."); rtrue;
+                   }
+                   rfalse;
+    ]
+;
+
+! ==================================================================== La gruta
+
+cueva guarida "guarida"
+with
+    irrelevante 'deshechos' 'comida' 'restos' 'animales',
+    descripcion "La casa de gollum. Por todas partes hay 
+                 restos de animales y deshechos",
+    al_n galeria
+;
+
+cueva galeria "galería"
+with
+    descripcion "La galería comunica la guarida de Gollum con otras cuevas
+                 y túneles circundantes.",
+    al_n EntradaCueva,
+    al_s Guarida,
+    al_e extremoE,
+    al_o extremoO
+;
+
+cueva EntradaCueva "Entrada desde el exterior"
+with
+    descripcion "La entrada a la red de túneles, que es la morada del gollum.",
+    al_s galeria
+;
+
+cueva extremoE "Tunel este"
+with
+    descripcion "La parte este de la red de galerías y túneles.",
+    al_o galeria
+;
+
+cueva extremoO "Tunel oeste"
+with
+    descripcion "La parte oeste de la red de galerías y túneles.",
+    al_e galeria
+;

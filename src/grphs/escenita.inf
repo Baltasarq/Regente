@@ -1,0 +1,136 @@
+! escenita.inf
+! En esta parte de la aventura, el anillo debe evitar ser arrojado a la forja
+! por Isildur.
+! Este archivo pertenece a regente.inf
+! Baltasar, el arquero baltasarq@yahoo.es
+
+class personaje
+with
+    articulo "a",
+    decir [s;
+        print "^";
+    	   Negrita();
+        print (address) self.nombre;
+        Normal();
+        print ": ~";
+  	   Italica();
+        print (string) s;
+        Normal();
+        print "~";
+    	   esperarTecla();
+  	   print "^^";
+    ],
+    antes [;
+  	   leer: return self.lecturaMente();
+        deslizar: "No podéis hacerlo.";
+        examinar: if (anillo.portador == self)
+                    print "Es el portador ahora.^";
+                  rfalse;
+    ],
+    vida [;
+        orden: self.decir("¡Nadie me da ordenes!"); rtrue;
+    ],
+    lecturaMente [;
+    	   "Su mente es fuerte y no puedes penetrar en ella.";
+    ],
+    despuesDePerderAnillo [; rtrue; ]
+has animado;
+
+
+!! ------------------------------------------------------------------- Isildur
+!! ------------------------- HABLA
+Object TemasdeIsildur
+;
+
+Object Tirar "No me tires" TemasdeIsildur
+with
+    nombre 'tires' 'arrojes' 'forja' 'Sauron' 'lava' 'fuego' 'mordor' 'lances' 'eches'
+;
+
+Object Poder "Gran poder" TemasdeIsildur
+with
+	nombre 'dar' 'poder' 'mando' 'dominio' 'control' 'anillo' 'regente' 'tuyo'
+;
+
+Object Ayuda "Ayuda" TemasdeIsildur
+with
+	nombre 'ayuda' 'help' 'sos' 'cable' 'ayudame' 'enrollate'
+;
+
+
+!! ------------------------------------------------------------------- clase
+personaje isildur "Isildur"
+with
+    nombre 'Isildur',
+    esta_en laMontanaFuego,
+    descripcion "Isildur es un odiado Numenóreano. Maldices el día en el
+                 que se aliaron con los Elfos. Pero los Numenóreanos no son
+                 tan fuertes como ellos ...",
+    lecturaMente [;
+    		"Isildur duda entre destruir definitivamente a Sauron arrojando el anillo
+            a la forja o ... aprovechar su poder ...";
+    ],
+    tiempo_restante 10,
+    tiempo_agotado [;
+        banderafin = 1;
+        self.decir("Tienes razón, la maldad del anillo debe ser destruida.");
+        print (address) self.nombre;
+        print " te arranca de su mano y te arroja a la forja incandescente.^
+         El reinado de Sauron ha terminado, pues tú no has sabido preservar
+         su obra.^";
+    ],
+    vida [;
+        hablar:
+        preguntar:
+        responder: switch(AveriguarTema(TemasdeIsildur)) {
+                        Tirar:self.decir("Debo arrojar el anillo de Sauron."); rtrue;
+                        Poder:
+                            puntuacion++;
+                            self.decir("Yo derroté a Sauron. Me corresponde el poder del anillo como compensación.");                            
+                            anillo.portador = 0;
+		                pararReloj(isildur);
+                            arrancarreloj(gollum, 5);
+                            continuahistoria.proyeccion();
+                            Erase_Window();
+                            jugadorA(elRio, 2);
+                            rtrue;
+				Ayuda: self.decir("¿Porqué debo ayudar a Sauron?"); rtrue;
+				default:  "Isildur lucha contra tu control.";
+                   }
+    ],
+    despuesDePerderAnillo [;
+    		"Isildur ve impotente como el anillo cae a la lava ...";
+    ]
+;
+
+responde tiraelputoanillo
+private
+    elementos
+        "Debemos tirar el anillo a la forja para destruir la maldad de Sauron."
+        "Isildur, tira el anillo."
+        "¡Isildur!"
+        "¡Vamos, destrúyelo!"
+        "Isildur, ¡debes destruirlo!"
+        "¡Vamos!"
+        "Isildur, sólo arrojando el anillo a la forja lo destruiremos."
+        "¿Cuantos más deben morir?"
+        "Isildur, ¿a qué esperas?"
+        "¿EH?"
+        "¡Vamos, hazlo!"
+        "Isildur, ¿por qué dudas?. Demasiados han muerto ya por ese anillo."
+        "¡Isildur!"
+        "Isildur, ¿qué haces?"
+        "¿No me oyes?"
+        "¡Isildur!"
+;
+        
+personaje elrond "Elrond"
+with
+    nombre 'Elrond',
+    esta_en laMontanaFuego,
+    descripcion "Elrond es un elfo, uno de los Eldar. Sabes que difícilmente
+                 podrías tener influjo sobre él.",
+    cada_turno [;
+         self.decir(tiraelputoanillo.dev_msg());       
+    ]
+;
