@@ -3,6 +3,7 @@
 *.bak
 
 # Story files
+*.z?.html
 *.z?
 *.ulx
 *.blb
