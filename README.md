@@ -10,6 +10,8 @@ Parte del juego consiste en averiguar los poderes del Anillo Regente. Es claro q
 
 Esta aventura es más bien breve.
 
+IFID: GLULX-3-021129-FCD75AD2
+
 # Compilación
 
 Es necesario utilizar [Inform 6](https://github.com/DavidKinder/Inform6), además de `bresc` y las herramientas `blorb`. El IDE [Scinf](http://github.com/baltasarq/Scinf/) puede ser de gran ayuda.
@@ -23,6 +25,8 @@ He incluido versiones Glulx y Z, se trata respectivamente de los ficheros:
 - regente.blb
 
 Se pueden jugar con un intérprete como [Gargoyle](https://ccxvii.net/gargoyle/).
+
+En el enlace a la web se puede jugar este relato en su formato sin gráficos.
 
 ## Legalidades
 
