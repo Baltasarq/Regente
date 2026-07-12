@@ -28,6 +28,10 @@ Se pueden jugar con un intérprete como [Gargoyle](https://ccxvii.net/gargoyle/)
 
 En el enlace a la web se puede jugar este relato en su formato sin gráficos.
 
+Puedes comunicarte con el resto de personajes escribiendo su nombre, una coma, y después el mensaje:
+
+           isildur, tú molas más
+
 ## Legalidades
 
 Todos los personajes, nombres de lugares e incluso línea argumental pertenecen a J.R.R. Tolkien
